@@ -1,0 +1,54 @@
+@model MyEconomy.Models.BudgetViewModel
+
+<h2>My budget</h2>
+
+<form asp-action="AddBudgetEntry" method="post">
+    <select name="Type" required>
+        <option value="">Select Type</option>
+        <option value="Income">Income</option>
+        <option value="Expense">Expense</option>
+    </select>
+    <input type="text" name="Description" placeholder="Description" required />
+    <input type="number" name="Amount" step="0.01" placeholder="Amount" required />
+    <button type="submit">Add</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Description</th>
+            <th>Income</th>
+            <th>Expenditure</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entry in Model.Entries)
+        {
+           <tr>
+        <td>@entry.Description</td>
+        <td>
+            @(entry.Amount > 0 ? entry.Amount.ToString("0.00") + " SEK" : "")
+        </td>
+        <td>
+            @(entry.Amount < 0 ? "- " + Math.Abs(entry.Amount).ToString("0.00") + " SEK" : "")
+        </td>
+    </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="2"><strong>Total Income</strong></td>
+            <td>@(@Model.TotalIncome.ToString("0.00") + " SEK")</td>
+        </tr>
+        <tr>
+            <td colspan="2"><strong>Total Expense</strong></td>
+            <td>@("- " + Math.Abs(Model.TotalExpense).ToString("0.00") + " SEK")</td>
+
+        </tr>
+        <tr style="border-top: 2px solid black;">
+            <td colspan="2"><strong>Balance</strong></td>
+           <td>@(Model.Balance = Model.TotalIncome - Model.TotalExpense)</td>
+        </tr>
+    </tfoot>
+</table>
+
