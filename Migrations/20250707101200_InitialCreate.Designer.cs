@@ -10,7 +10,7 @@ using MyEconomy.Data;
 namespace MyEconomy.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250707093010_InitialCreate")]
+    [Migration("20250707101200_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -26,15 +26,18 @@ namespace MyEconomy.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasAnnotation("Relational:JsonPropertyName", "amount");
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasAnnotation("Relational:JsonPropertyName", "description");
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("TEXT")
+                        .HasAnnotation("Relational:JsonPropertyName", "type");
 
                     b.HasKey("Id");
 

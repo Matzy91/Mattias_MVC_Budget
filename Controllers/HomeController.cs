@@ -18,15 +18,15 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-     
-       return View();
+
+        return View();
     }
 
     public IActionResult Budget()
     {
         var entries = _context.BudgetEntries.ToList();
         var totalIncome = entries.Where(e => e.Type == "Income").Sum(e => e.Amount);
-        var totalExpense = -entries.Where(e => e.Type == "Expense").Sum(e => e.Amount); 
+        var totalExpense = -entries.Where(e => e.Type == "Expense").Sum(e => e.Amount);
         var balance = entries.Sum(e => e.Amount);
 
         var budgetmodel = new BudgetViewModel
@@ -45,10 +45,10 @@ public class HomeController : Controller
     {
         if (ModelState.IsValid)
         {
-             if (entry.Type == "Expense" && entry.Amount > 0)
-        {
-            entry.Amount = -entry.Amount;
-        }
+            if (entry.Type == "Expense" && entry.Amount > 0)
+            {
+                entry.Amount = -entry.Amount;
+            }
             _context.BudgetEntries.Add(entry);
             _context.SaveChanges();
         }
@@ -76,5 +76,20 @@ public class HomeController : Controller
             _context.SaveChanges();
         }
         return RedirectToAction("Budget");
+    }
+    
+    [HttpPost]
+    public IActionResult SubmitEntries([FromBody] List<BudgetEntry> entries)
+    {
+        foreach (var entry in entries)
+        {
+            if (entry.Type == "Expense" && entry.Amount > 0)
+            {
+                entry.Amount = -entry.Amount;
+            }
+            _context.BudgetEntries.Add(entry);
+        }
+        _context.SaveChanges();
+        return Ok();
     }
 }
