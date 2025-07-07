@@ -47,7 +47,7 @@
         </tr>
         <tr style="border-top: 2px solid black;">
             <td colspan="2"><strong>Balance</strong></td>
-           <td>@(Model.Balance = Model.TotalIncome - Model.TotalExpense)</td>
+           <td>@((Model.TotalIncome - Model.TotalExpense).ToString("0.00") + " SEK")</td>
         </tr>
     </tfoot>
 </table>

@@ -10,7 +10,7 @@ using MyEconomy.Data;
 namespace MyEconomy.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250706224610_InitialCreate")]
+    [Migration("20250707093010_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
