@@ -69,15 +69,16 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public IActionResult UpdateBudgetEntry(BudgetEntry entry)
+    public IActionResult UpdateBudgetEntry([FromBody] BudgetEntry entry)
     {
         if (ModelState.IsValid)
         {
             _context.BudgetEntries.Update(entry);
             _context.SaveChanges();
         }
-        return RedirectToAction("Budget");
+        return Ok();
     }
+
 
     [HttpDelete]
     public IActionResult DeleteBudgetEntry(int id)

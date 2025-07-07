@@ -9,3 +9,4 @@ dotnet ef database update
 #start 
 dotnet run
 dotnet watch run #for live update
+

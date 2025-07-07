@@ -4,7 +4,7 @@
     @{
         var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
     }
-    <div class="content-box">
+    <div class="content-box p-4 bg-dark text-white rounded">
         <h1 class="display-4">Budget Overview</h1>
 
 
@@ -53,7 +53,7 @@
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
         
-                <div class="content-box">
+                <div class="content-box p-4 bg-dark text-white rounded">
                     <div class="modal-header">
                         <h5 class="modal-title">Edit Budget Entries</h5>
                         <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
@@ -103,126 +103,188 @@
     </div>
 
     <script>
-        const existingEntries = @Html.Raw(JsonSerializer.Serialize(Model.Entries, options));
-        let tempEntries = [];
-        let editingIndex = null;
+    const existingEntries = @Html.Raw(JsonSerializer.Serialize(Model.Entries, options));
+    let tempEntries = [];
+    let editingIndex = null;
 
-        window.onload = () => {
-            renderExistingEntries();
+    window.onload = () => {
+        renderExistingEntries();
 
-            // Add Enter key support on the amount input
-            document.getElementById("modalAmount").addEventListener("keydown", function(event) {
-                if (event.key === "Enter") {
-                    event.preventDefault();
-                    addEntry();
-                }
-            });
-        }
-
-        function renderExistingEntries() {
-            const tbody = document.getElementById("existingEntriesTbody");
-            tbody.innerHTML = "";
-
-            existingEntries.forEach(entry => {
-                const amount = Math.abs(Number(entry.amount)).toFixed(2);
-
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${entry.type}</td>
-                    <td>${entry.description}</td>
-                    <td>${amount} SEK</td>
-                    <td>
-                        <button class="btn btn-sm btn-danger" onclick="deleteExistingEntry(${entry.id})">Delete</button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        function deleteExistingEntry(id) {
-            if (confirm("Are you sure you want to delete this entry?")) {
-                fetch('/Home/DeleteBudgetEntry/' + id, {
-                    method: 'DELETE'
-                }).then(res => {
-                    if (res.ok) {
-                        const index = existingEntries.findIndex(e => e.id === id);
-                        if (index > -1) {
-                            existingEntries.splice(index, 1);
-                            renderExistingEntries();
-                        }
-                    } else {
-                        alert("Failed to delete.");
-                    }
-                });
+        document.getElementById("modalAmount").addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                addEntry();
             }
+        });
+    }
+
+    function renderExistingEntries() {
+        const tbody = document.getElementById("existingEntriesTbody");
+        tbody.innerHTML = "";
+
+        existingEntries.forEach(entry => {
+            const amount = Math.abs(Number(entry.amount)).toFixed(2);
+
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${entry.type}</td>
+                <td>${entry.description}</td>
+                <td>${amount} SEK</td>
+                <td>
+                    <button class="btn btn-sm btn-warning" onclick="editExistingEntry(${entry.id})">Edit</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteExistingEntry(${entry.id})">Delete</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function editExistingEntry(id) {
+        const entry = existingEntries.find(e => e.id === id);
+        if (!entry) return;
+
+        document.getElementById("modalType").value = entry.type;
+        document.getElementById("modalDescription").value = entry.description;
+        document.getElementById("modalAmount").value = Math.abs(entry.amount);
+
+        const confirmBtn = document.querySelector(".modal-footer .btn-primary");
+        confirmBtn.textContent = "Save Changes";
+        confirmBtn.onclick = function () {
+            saveChanges(id);
+        };
+
+        const modalElement = document.getElementById("budgetModal");
+        const modal = bootstrap.Modal.getOrCreateInstance(modalElement);
+        modal.show();
+
+    }
+
+    function saveChanges(id) {
+        const type = document.getElementById("modalType").value;
+        const description = document.getElementById("modalDescription").value.trim();
+        const amount = parseFloat(document.getElementById("modalAmount").value);
+
+        if (!type || !description || isNaN(amount)) {
+            alert("Please fill in all fields correctly.");
+            return;
         }
 
-        function updateTable() {
-            const tbody = document.getElementById("newEntriesTbody");
-            tbody.innerHTML = "";
+        const updatedEntry = {
+            id: id,
+            type: type,
+            description: description,
+            amount: amount
+        };
 
-            tempEntries.forEach((entry, index) => {
-                const amount = Math.abs(Number(entry.amount)).toFixed(2);
-
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${entry.type}</td>
-                    <td>${entry.description}</td>
-                    <td>${amount} SEK</td>
-                    <td>
-                        <button class="btn btn-sm btn-danger" onclick="removeEntry(${index})">Delete</button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        function addEntry() {
-            const type = document.getElementById("modalType").value;
-            const desc = document.getElementById("modalDescription").value.trim();
-            const amount = parseFloat(document.getElementById("modalAmount").value);
-
-            if (!type || !desc || isNaN(amount)) {
-                alert("Please fill in all fields with valid values.");
-                return;
-            }
-
-            const entry = { type, description: desc, amount };
-
-            if (editingIndex !== null) {
-                tempEntries[editingIndex] = { ...tempEntries[editingIndex], ...entry };
-                editingIndex = null;
+        fetch('/Home/UpdateBudgetEntry', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedEntry)
+        })
+        .then(response => {
+            if (response.ok) {
+                location.reload();
             } else {
-                tempEntries.push(entry);
+                alert("Failed to update entry.");
             }
+        });
+    }
 
-            updateTable();
-            document.getElementById("modalEntryForm").reset();
-            document.getElementById("modalType").focus();
-        }
-
-        function removeEntry(index) {
-            tempEntries.splice(index, 1);
-            updateTable();
-        }
-
-        function resetEntries() {
-            tempEntries = [];
-            updateTable();
-        }
-
-        function submitEntries() {
-            fetch('/Home/SubmitEntries', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(tempEntries)
-            })
-            .then(response => {
-                if (response.ok) {
-                    location.reload();
+    function deleteExistingEntry(id) {
+        if (confirm("Are you sure you want to delete this entry?")) {
+            fetch('/Home/DeleteBudgetEntry/' + id, {
+                method: 'DELETE'
+            }).then(res => {
+                if (res.ok) {
+                    const index = existingEntries.findIndex(e => e.id === id);
+                    if (index > -1) {
+                        existingEntries.splice(index, 1);
+                        renderExistingEntries();
+                    }
                 } else {
-                    alert("Something went wrong.");
+                    alert("Failed to delete.");
                 }
             });
         }
-    </script>
+    }
+
+    function updateTable() {
+        const tbody = document.getElementById("newEntriesTbody");
+        tbody.innerHTML = "";
+
+        tempEntries.forEach((entry, index) => {
+            const amount = Math.abs(Number(entry.amount)).toFixed(2);
+
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${entry.type}</td>
+                <td>${entry.description}</td>
+                <td>${amount} SEK</td>
+                <td>
+                    <button class="btn btn-sm btn-danger" onclick="removeEntry(${index})">Delete</button>
+                </td>
+            `;
+            tbody.appendChild(row);
+        });
+    }
+
+    function addEntry() {
+        const type = document.getElementById("modalType").value;
+        const desc = document.getElementById("modalDescription").value.trim();
+        const amount = parseFloat(document.getElementById("modalAmount").value);
+
+        if (!type || !desc || isNaN(amount)) {
+            alert("Please fill in all fields with valid values.");
+            return;
+        }
+
+        const entry = { type, description: desc, amount };
+
+        if (editingIndex !== null) {
+            tempEntries[editingIndex] = { ...tempEntries[editingIndex], ...entry };
+            editingIndex = null;
+        } else {
+            tempEntries.push(entry);
+        }
+
+        updateTable();
+        document.getElementById("modalEntryForm").reset();
+        document.getElementById("modalType").focus();
+    }
+
+    function removeEntry(index) {
+        tempEntries.splice(index, 1);
+        updateTable();
+    }
+
+    function resetEntries() {
+        tempEntries = [];
+        updateTable();
+    }
+
+    function submitEntries() {
+        fetch('/Home/SubmitEntries', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(tempEntries)
+        })
+        .then(response => {
+            if (response.ok) {
+                location.reload();
+            } else {
+                alert("Something went wrong.");
+            }
+        });
+    }
+
+    // Reset modal on close
+    document.getElementById("budgetModal").addEventListener("hidden.bs.modal", () => {
+        const confirmBtn = document.querySelector(".modal-footer .btn-primary");
+        confirmBtn.textContent = "Confirm";
+        confirmBtn.onclick = submitEntries;
+
+        document.getElementById("modalEntryForm").reset();
+        editingIndex = null;
+    });
+</script>
+

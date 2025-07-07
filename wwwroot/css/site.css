@@ -37,13 +37,13 @@ button.btn {
 
 
 .modal-header, .modal-footer {
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(0, 0, 0, 0.2);
     color: white;
 }
 
 
 .modal-content {
-    background-color: rgba(0, 0, 0, 0.4);
+    background-color: rgba(0, 0, 0, 0.1);
     border: none;
     box-shadow: none;
 }
