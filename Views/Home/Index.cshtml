@@ -1,9 +1,68 @@
-﻿@{
+﻿@model MyEconomy.Models.BudgetViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Here are my simple MVC views</p>
+<div class="content-box text-center mb-4">
+    <h1 class="display-4">Welcome to MyBudget</h1>
+    <p>This is the Overview of your provided budget</p>
 </div>
 
+<div class="content-box row mb-4">
+    <div class="col-md-4">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-header">Total Income</div>
+            <div class="card-body">
+                <h3 class="card-title">@Model.TotalIncome.ToString("0.00") SEK</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-danger mb-3">
+            <div class="card-header">Total Expense</div>
+            <div class="card-body">
+                <h3 class="card-title">-@Math.Abs(Model.TotalExpense).ToString("0.00") SEK</h3>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-header">Balance</div>
+            <div class="card-body">
+                <h3 class="card-title">@Model.Balance.ToString("0.00") SEK</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content-box">
+    <h2>Recent Entries</h2>
+    <table class="table table-striped table-dark">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var entry in Model.Entries.OrderByDescending(e => e.Id).Take(5))
+            {
+                <tr>
+                    <td>@entry.Description</td>
+                    <td>@entry.Type</td>
+                    <td>
+                        @(entry.Amount > 0 
+                            ? entry.Amount.ToString("0.00") + " SEK" 
+                            : "- " + Math.Abs(entry.Amount).ToString("0.00") + " SEK")
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="content-box text-center mt-3">
+    <a href="@Url.Action("Budget", "Home")" class="btn btn-primary btn-lg">Manage Budget</a>
+</div>

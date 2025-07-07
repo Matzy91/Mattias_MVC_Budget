@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "ggwtOUjhSvS54KPCiYMyIxms9BeI0YjN51cdYh01ZlA=",
+  "Hash": "yM71BnJl4lKLnJsnluMLThZupK3vqRFDkd0ZjUDopBs=",
   "Source": "MyEconomy",
   "BasePath": "_content/MyEconomy",
   "Mode": "Default",
@@ -91,6 +91,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\matti\\Desktop\\Egna proj\\Mattias_MVC\\wwwroot\\images\\writing-pad-3202747.jpg",
+      "SourceId": "MyEconomy",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\matti\\Desktop\\Egna proj\\Mattias_MVC\\wwwroot\\",
+      "BasePath": "_content/MyEconomy",
+      "RelativePath": "images/writing-pad-3202747.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\writing-pad-3202747.jpg"
     },
     {
       "Identity": "C:\\Users\\matti\\Desktop\\Egna proj\\Mattias_MVC\\wwwroot\\js\\site.js",

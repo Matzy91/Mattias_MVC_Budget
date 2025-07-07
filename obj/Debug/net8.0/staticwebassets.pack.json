@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\matti\\Desktop\\Egna proj\\Mattias_MVC\\wwwroot\\images\\writing-pad-3202747.jpg",
+      "PackagePath": "staticwebassets\\images\\writing-pad-3202747.jpg"
+    },
+    {
       "Id": "C:\\Users\\matti\\Desktop\\Egna proj\\Mattias_MVC\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

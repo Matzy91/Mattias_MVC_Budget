@@ -1,98 +1,103 @@
-@model MyEconomy.Models.BudgetViewModel
 @using System.Text.Json
+@model MyEconomy.Models.BudgetViewModel
 
 @{
     var options = new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
 }
 
-<h2>My budget</h2>
+<h2 class="content-box">My budget</h2>
 
-<form asp-action="AddBudgetEntry" method="post">
+<form asp-action="AddBudgetEntry" method="post" class="content-box mb-3">
     <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#budgetModal">
         Edit Budget
     </button>
 </form>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Description</th>
-            <th>Income</th>
-            <th>Expenditure</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var entry in Model.Entries)
-        {
+<div class="content-box mb-4">
+    <table class="table">
+        <thead>
             <tr>
-                <td>@entry.Description</td>
-                <td>@(entry.Amount > 0 ? entry.Amount.ToString("0.00") + " SEK" : "")</td>
-                <td>@(entry.Amount < 0 ? "- " + Math.Abs(entry.Amount).ToString("0.00") + " SEK" : "")</td>
+                <th>Description</th>
+                <th>Income</th>
+                <th>Expenditure</th>
             </tr>
-        }
-    </tbody>
-    <tfoot>
-        <tr>
-            <td colspan="2"><strong>Total Income</strong></td>
-            <td>@Model.TotalIncome.ToString("0.00") SEK</td>
-        </tr>
-        <tr>
-            <td colspan="2"><strong>Total Expense</strong></td>
-            <td>-@Math.Abs(Model.TotalExpense).ToString("0.00") SEK</td>
-        </tr>
-        <tr style="border-top: 2px solid black;">
-            <td colspan="2"><strong>Balance</strong></td>
-            <td>@(Model.Balance.ToString("0.00")) SEK</td>
-        </tr>
-    </tfoot>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var entry in Model.Entries)
+            {
+                <tr>
+                    <td>@entry.Description</td>
+                    <td>@(entry.Amount > 0 ? entry.Amount.ToString("0.00") + " SEK" : "")</td>
+                    <td>@(entry.Amount < 0 ? "- " + Math.Abs(entry.Amount).ToString("0.00") + " SEK" : "")</td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="2"><strong>Total Income</strong></td>
+                <td>@Model.TotalIncome.ToString("0.00") SEK</td>
+            </tr>
+            <tr>
+                <td colspan="2"><strong>Total Expense</strong></td>
+                <td>-@Math.Abs(Model.TotalExpense).ToString("0.00") SEK</td>
+            </tr>
+            <tr style="border-top: 2px solid white;">
+                <td colspan="2"><strong>Balance</strong></td>
+                <td>@(Model.Balance.ToString("0.00")) SEK</td>
+            </tr>
+        </tfoot>
+    </table>
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="budgetModal" tabindex="-1" aria-labelledby="budgetModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Edit Budget Entries</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <form id="modalEntryForm">
-                    <div class="row mb-3">
-                        <div class="col">
-                            <select id="modalType" class="form-select" required>
-                                <option value="">Select Type</option>
-                                <option value="Income">Income</option>
-                                <option value="Expense">Expense</option>
-                            </select>
+            <!-- Wrap actual modal content in content-box for readability -->
+            <div class="content-box">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Budget Entries</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="modalEntryForm">
+                        <div class="row mb-3">
+                            <div class="col">
+                                <select id="modalType" class="form-select" required>
+                                    <option value="">Select Type</option>
+                                    <option value="Income">Income</option>
+                                    <option value="Expense">Expense</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <input type="text" id="modalDescription" class="form-control" placeholder="Description" required />
+                            </div>
+                            <div class="col">
+                                <input type="number" id="modalAmount" class="form-control" step="0.01" placeholder="Amount" required />
+                            </div>
+                            <div class="col">
+                                <button type="button" class="btn btn-success" onclick="addEntry()">Add</button>
+                            </div>
                         </div>
-                        <div class="col">
-                            <input type="text" id="modalDescription" class="form-control" placeholder="Description" required />
-                        </div>
-                        <div class="col">
-                            <input type="number" id="modalAmount" class="form-control" step="0.01" placeholder="Amount" required />
-                        </div>
-                        <div class="col">
-                            <button type="button" class="btn btn-success" onclick="addEntry()">Add</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
 
-                <table class="table" id="entryPreviewTable">
-                    <thead>
-                        <tr>
-                            <th>Type</th>
-                            <th>Description</th>
-                            <th>Amount</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="existingEntriesTbody"></tbody>
-                    <tbody id="newEntriesTbody"></tbody>
-                </table>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" onclick="resetEntries()">Undo</button>
-                <button type="button" class="btn btn-primary" onclick="submitEntries()">Confirm</button>
+                    <table class="table" id="entryPreviewTable">
+                        <thead>
+                            <tr>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="existingEntriesTbody"></tbody>
+                        <tbody id="newEntriesTbody"></tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="resetEntries()">Undo</button>
+                    <button type="button" class="btn btn-primary" onclick="submitEntries()">Confirm</button>
+                </div>
             </div>
         </div>
     </div>

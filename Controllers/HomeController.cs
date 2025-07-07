@@ -17,10 +17,23 @@ public class HomeController : Controller
     }
 
     public IActionResult Index()
-    {
+{
+    var entries = _context.BudgetEntries.ToList();
+    var totalIncome = entries.Where(e => e.Type == "Income").Sum(e => e.Amount);
+    var totalExpense = -entries.Where(e => e.Type == "Expense").Sum(e => e.Amount);
+    var balance = entries.Sum(e => e.Amount);
 
-        return View();
-    }
+    var model = new BudgetViewModel
+    {
+        Entries = entries,
+        TotalIncome = totalIncome,
+        TotalExpense = totalExpense,
+        Balance = balance
+    };
+
+    return View(model);
+}
+
 
     public IActionResult Budget()
     {
