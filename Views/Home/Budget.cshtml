@@ -28,18 +28,21 @@
             </tbody>
             <tfoot>
                 <tr style="border-top: 2px solid white;">
-                    <td colspan="2"><strong>Total Income</strong></td>
+                    <td><strong>Total Income</strong></td>
                     <td>@Model.TotalIncome.ToString("0.00") SEK</td>
+                    <td></td>
                 </tr>
                 <tr>
-                    <td colspan="2"><strong>Total Expense</strong></td>
+                    <td><strong>Total Expense</strong></td>
+                    <td></td>
                     <td>-@Math.Abs(Model.TotalExpense).ToString("0.00") SEK</td>
                 </tr>
                 <tr style="border-top: 2px solid white;">
-                    <td colspan="2"><strong>Balance</strong></td>
-                    <td>@(Model.Balance.ToString("0.00")) SEK</td>
+                    <td><strong>Balance</strong></td>
+                    <td colspan="2">@Model.Balance.ToString("0.00") SEK</td>
                 </tr>
             </tfoot>
+
         </table>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#budgetModal">Edit Budget</button>
     </div>
