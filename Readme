@@ -5,6 +5,7 @@
 dotnet ef migrations add InitialCreate 
 dotnet ef database update
 
+#Remove sqlfile before migration and update
 
 #start 
 dotnet run
