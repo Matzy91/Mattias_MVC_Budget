@@ -261,3 +261,11 @@ C:\Users\matti\Desktop\Egna proj\Mattias_MVC\obj\Debug\net8.0\MyEconomy.pdb
 C:\Users\matti\Desktop\Egna proj\Mattias_MVC\obj\Debug\net8.0\MyEconomy.genruntimeconfig.cache
 C:\Users\matti\Desktop\Egna proj\Mattias_MVC\obj\Debug\net8.0\ref\MyEconomy.dll
 C:\Users\matti\Desktop\Egna proj\Mattias_MVC\obj\Debug\net8.0\MyEconomy.sourcelink.json
+C:\Users\matti\Desktop\Egna proj\Mattias_MVC\bin\Debug\net8.0\Configuration\obj\Configuration.csproj.nuget.dgspec.json
+C:\Users\matti\Desktop\Egna proj\Mattias_MVC\bin\Debug\net8.0\Configuration\obj\project.assets.json
+C:\Users\matti\Desktop\Egna proj\Mattias_MVC\bin\Debug\net8.0\Controllers\obj\Controllers.csproj.nuget.dgspec.json
+C:\Users\matti\Desktop\Egna proj\Mattias_MVC\bin\Debug\net8.0\Controllers\obj\project.assets.json
+C:\Users\matti\Desktop\Egna proj\Mattias_MVC\bin\Debug\net8.0\Models\obj\Models.csproj.nuget.dgspec.json
+C:\Users\matti\Desktop\Egna proj\Mattias_MVC\bin\Debug\net8.0\Models\obj\project.assets.json
+C:\Users\matti\Desktop\Egna proj\Mattias_MVC\bin\Debug\net8.0\Services\obj\project.assets.json
+C:\Users\matti\Desktop\Egna proj\Mattias_MVC\bin\Debug\net8.0\Services\obj\Services.csproj.nuget.dgspec.json
